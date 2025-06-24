@@ -7,19 +7,8 @@ export const HOMEPAGE = 'https://ethers-opt.com';
 export const REPO = 'https://github.com/cpuchain/ethers-opt';
 export const NPMJS = 'https://npmjs.com/package/ethers-opt';
 
-// Get latest release version
-export async function getNpmRelease(): Promise<string> {
-  try {
-    const latestJson = await (await fetch(`https://registry.npmjs.org/${pkgJson.name}/latest`)).json();
-
-    return latestJson?.version || '1.0.0';
-  } catch {
-    return '1.0.0';
-  }
-}
-
 // https://vitepress.dev/reference/site-config
-export const getConfig = async (version: string) => defineConfig({
+export const getConfig = defineConfig({
   title: TITLE,
 
   description: pkgJson.description,
@@ -52,7 +41,7 @@ export const getConfig = async (version: string) => defineConfig({
       { text: 'Home', link: '/' },
       { text: 'Github', link: REPO },
       {
-        text: `v${version}`,
+        text: `v${pkgJson.version}`,
         items: [
           { text: 'Package', link: NPMJS },
           //{ text: 'Changelog', link: 'https://github.com/cpuchain/ethers-opt/blob/main/CHANGELOG.md' },
@@ -86,6 +75,4 @@ export const getConfig = async (version: string) => defineConfig({
   }
 })
 
-export default async function () {
-  return await getConfig(await getNpmRelease());
-}
+export default getConfig;
