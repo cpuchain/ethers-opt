@@ -3,8 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MULTICALL_ADDRESS = void 0;
 exports.multicall = multicall;
 exports.MULTICALL_ADDRESS = '0xcA11bde05977b3631167028862bE2a173976CA11';
-// Minimal fork of @pancakeswap/multicall
-// Use this function if you need call overrides with past blocks, etc.
+/**
+ * Minimal fork of @pancakeswap/multicall
+ * Calls the Multicall aggregate3 staticCall with an array of calls, returning results in order.
+ * Use for batch contract calls with or without specific block tags/overrides.
+ * @param multi Multicall contract instance.
+ * @param calls Array of CallV3 objects.
+ * @param overrides (Optional) Call overrides.
+ * @returns Array of results: decoded if possible, else raw data.
+ */
 async function multicall(multi, calls, overrides = {}) {
     const calldata = calls.map(({ contract, address, interface: cInterface, name, params, allowFailure }) => {
         const target = (contract?.target || address);

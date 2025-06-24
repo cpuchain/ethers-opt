@@ -3,6 +3,8 @@ import type {
     Network,
     Networkish,
     FetchRequest,
+    Provider as ethProvider,
+    JsonRpcApiProvider,
     JsonRpcApiProviderOptions,
     PerformActionRequest,
     TransactionReceipt,
@@ -25,11 +27,17 @@ const {
     defineProperties,
 } = ethers;
 
+/**
+ * Result for a single Multicall call.
+ */
 export interface MulticallResult {
     status: boolean;
     data: string;
 }
 
+/**
+ * State object for a batched Multicall request.
+ */
 export interface MulticallHandle {
     request: { to: string; data: string };
     resolve: (result: MulticallResult) => void;
@@ -45,11 +53,21 @@ function toJson(value: null | bigint): null | string {
     return value.toString();
 }
 
+/**
+ * Extension of ethers' FeeData for more granular priority fee tracking.
+ */
 export class FeeDataExt extends ethFeeData {
     readonly maxPriorityFeePerGasSlow!: null | bigint;
 
     readonly maxPriorityFeePerGasMedium!: null | bigint;
 
+    /**
+     * @param gasPrice The gas price or null.
+     * @param maxFeePerGas The EIP-1559 max fee per gas.
+     * @param maxPriorityFeePerGas The max priority fee per gas.
+     * @param maxPriorityFeePerGasSlow Optional: Lower percentile priority fee.
+     * @param maxPriorityFeePerGasMedium Optional: Medium percentile priority fee.
+     */
     constructor(
         gasPrice?: null | bigint,
         maxFeePerGas?: null | bigint,
@@ -89,7 +107,12 @@ export class FeeDataExt extends ethFeeData {
     }
 }
 
+/**
+ * Provider configuration options, including multicall, fees, ENS handling, and more.
+ */
 export interface ProviderOptions extends JsonRpcApiProviderOptions {
+    hardhatProvider?: ethProvider;
+
     chainId?: bigint | number;
 
     ensResolver?: typeof EnsResolver;
@@ -103,11 +126,14 @@ export interface ProviderOptions extends JsonRpcApiProviderOptions {
 }
 
 /**
- * Static network & Multicaller by default
+ * Enhanced Ethers Provider with Multicall, static network detection, batch fee data, and ENS support.
  *
+ * (Which comes with static network, multicaller enabled by defaut)
  * (Multicaller inspired by https://github.com/ethers-io/ext-provider-multicall)
  */
 export class Provider extends ethJsonRpcProvider {
+    hardhatProvider?: ethProvider;
+
     staticNetwork: Promise<Network>;
     #network?: Network;
 
@@ -128,6 +154,12 @@ export class Provider extends ethJsonRpcProvider {
     multicallQueue: MulticallHandle[];
     multicallTimer: null | ReturnType<typeof setTimeout>;
 
+    /**
+     * Create a new Provider.
+     * @param url RPC URL or FetchRequest.
+     * @param network Networkish.
+     * @param options Provider options.
+     */
     constructor(url?: string | FetchRequest, network?: Networkish, options?: ProviderOptions) {
         // 30ms (default)
         const multicallStallTime = options?.multicallStallTime ?? 30;
@@ -139,11 +171,17 @@ export class Provider extends ethJsonRpcProvider {
             batchStallTime,
         });
 
+        this.hardhatProvider = options?.hardhatProvider;
+
         this.feeHistory = options?.feeHistory ?? false;
 
         this.staticNetwork = (async () => {
             if (network) {
                 return ethNetwork.from(network);
+            }
+
+            if (options?.hardhatProvider) {
+                return ethNetwork.from(await options.hardhatProvider.getNetwork());
             }
 
             const _network = ethNetwork.from(await new ethJsonRpcProvider(url).getNetwork());
@@ -169,7 +207,7 @@ export class Provider extends ethJsonRpcProvider {
                 return EnsResolver;
             }
 
-            throw new Error('Unsupported EMS type');
+            throw new Error('Unsupported ENS type');
         });
 
         this.multicall = Multicall__factory.connect(options?.multicall || MULTICALL_ADDRESS, this);
@@ -181,11 +219,13 @@ export class Provider extends ethJsonRpcProvider {
         this.multicallTimer = null;
     }
 
+    /** Gets the detected or static network. */
     get _network(): Network {
         assert(this.#network, 'network is not available yet', 'NETWORK_ERROR');
         return this.#network;
     }
 
+    /** @override Resolves to the network, or throws and ensures auto-destroy on error. */
     async _detectNetwork(): Promise<Network> {
         try {
             return await this.staticNetwork;
@@ -205,6 +245,8 @@ export class Provider extends ethJsonRpcProvider {
      *
      * Note that in some networks (like L2), maxFeePerGas can be smaller than maxPriorityFeePerGas and if so,
      * using the value as is could throw an error from RPC as maxFeePerGas should be always bigger than maxPriorityFeePerGas
+     *
+     * @returns Promise resolving to FeeDataExt instance.
      */
     async getFeeData(): Promise<FeeDataExt> {
         const [
@@ -261,19 +303,29 @@ export class Provider extends ethJsonRpcProvider {
     }
 
     /**
-     * Override EnsResolver to use our optimized resolver class object
+     * Returns the ENS resolver for the specified name.
+     * @param name ENS name to resolve.
+     * @returns Resolves to an EnsResolver or null.
      */
     async getResolver(name: string): Promise<null | EnsResolver> {
         return (await this.ensResolver).fromName(this, name);
     }
 
+    /**
+     * Performs a reverse-lookup (address to ENS, if any).
+     * @param address Address to lookup.
+     * @param reverseCheck Perform confirmation roundtrip.
+     * @returns ENS name or null.
+     */
     async lookupAddress(address: string, reverseCheck?: boolean): Promise<null | string> {
         return (await this.ensResolver).lookupAddress(this, address, reverseCheck);
     }
 
     /**
-     * Wrapper around waitForTransaction to have default confirmation
-     * Doesn't throw on timeout and instead returns null
+     * Waits for specified transaction (or hash) to confirm, with default timeout.
+     * Does not throw on timeout.
+     * @param hashOrTx TransactionResponse or hash or null.
+     * @returns Null or the TransactionReceipt if confirmed.
      */
     async wait(hashOrTx: null | string | TransactionResponse): Promise<null | TransactionReceipt> {
         try {
@@ -289,14 +341,42 @@ export class Provider extends ethJsonRpcProvider {
         }
     }
 
-    async getBlockReceipts(blockTag: BlockTag): Promise<TransactionReceipt[]> {
+    /**
+     * Returns whether an address has code (i.e., is a contract) on-chain.
+     * @param address Address to check.
+     * @returns True if code exists (contract), false otherwise.
+     */
+    async hasCode(address: string) {
+        const code = await this.getCode(address);
+
+        return code && code !== '0x' ? true : false;
+    }
+
+    /**
+     * Gets receipts for all transactions in a block as an array.
+     * @param blockTag Block to query.
+     * @returns Promise resolving to an array of TransactionReceipts.
+     */
+    async getBlockReceipts(blockTag?: BlockTag): Promise<TransactionReceipt[]> {
         return getBlockReceipts(this, blockTag, this.#network);
     }
 
-    async traceBlock(blockTag: BlockTag, onlyTopCall?: boolean): Promise<CallTrace[]> {
+    /**
+     * Trace internal calls for a whole block.
+     * @param blockTag Block to trace.
+     * @param onlyTopCall If true, only trace top-level calls.
+     * @returns Array of CallTrace objects for each transaction in the block.
+     */
+    async traceBlock(blockTag?: BlockTag, onlyTopCall?: boolean): Promise<CallTrace[]> {
         return traceBlock(this, blockTag, onlyTopCall);
     }
 
+    /**
+     * Trace internal calls for a given transaction hash.
+     * @param hash Transaction hash.
+     * @param onlyTopCall If true, only trace the top-level call.
+     * @returns CallTrace object for the traced transaction.
+     */
     async traceTransaction(hash: string, onlyTopCall?: boolean): Promise<CallTrace> {
         return traceTransaction(this, hash, onlyTopCall);
     }
@@ -343,6 +423,12 @@ export class Provider extends ethJsonRpcProvider {
         }
     }
 
+    /**
+     * Queue a Multicall aggregate3 call (internal).
+     * @private
+     * @param to Call target address.
+     * @param data Calldata.
+     */
     _queueCall(to: string, data = '0x'): Promise<MulticallResult> {
         if (!this.multicallTimer) {
             this.multicallTimer = setTimeout(() => {
@@ -376,5 +462,17 @@ export class Provider extends ethJsonRpcProvider {
         }
 
         return super._perform(req);
+    }
+
+    /**
+     * For Hardhat test environments, reroutes .send() calls to the in-memory provider.
+     * @override
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async send(method: string, params: any[] | Record<string, any>): Promise<any> {
+        if (this.hardhatProvider) {
+            return (this.hardhatProvider as JsonRpcApiProvider).send(method, params);
+        }
+        return super.send(method, params);
     }
 }

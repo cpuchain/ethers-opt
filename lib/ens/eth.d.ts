@@ -15,9 +15,9 @@ export declare class EnsResolver extends ethEnsResolver {
     static fromName(provider: AbstractProvider, name: string): Promise<null | EnsResolver>;
     static lookupAddress(provider: AbstractProvider, address: string, reverseCheck?: boolean): Promise<null | string>;
     /**
-     * Method overrides to cover error if name doesn't exists
+     * Method overrides to handle errors if name doesn't exist
      * (Error: could not decode result data ethers/src.ts/providers/ens-resolver.ts:249:30)
-     * (can not be covered up with resolver address being null and result === '0x')
+     * (Cannot be handled by checking if resolver address is null or result is '0x')
      * (Likely bug on #fetch from EnsResolver with return iface.decodeFunctionResult(fragment, result)[0];)
      */
     getAddress(coinType?: number): Promise<null | string>;

@@ -3,6 +3,9 @@ import { ethers } from './ethers';
 
 const { getAddress } = ethers;
 
+/**
+ * Details for a call trace (internal transaction) within a transaction or block.
+ */
 export interface CallTrace {
     from: string;
     gas: number;
@@ -19,6 +22,13 @@ export interface CallTrace {
     txHash: string;
 }
 
+/**
+ * Formats a raw trace response from debug_traceBlock/tx into structured CallTrace.
+ * @param params Raw trace params.
+ * @param txHash Transaction hash.
+ * @param blockParams Block context (number, hash).
+ * @returns Formatte CallTrace internal transaction object
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function formatCallTrace(params: any, txHash: string, blockParams: BlockParams): CallTrace {
     return {
@@ -37,17 +47,24 @@ export function formatCallTrace(params: any, txHash: string, blockParams: BlockP
     };
 }
 
+/**
+ * Traces all transactions in a block for internal calls using debug_traceBlock...
+ * @param provider JsonRpcProvider.
+ * @param blockTag Block number/tag/hash (default: latest).
+ * @param onlyTopCall If true, only include top-level calls.
+ * @returns Array of call traces, one for each transaction.
+ */
 export async function traceBlock(
     provider: JsonRpcProvider,
-    blockTag: BlockTag,
+    blockTag?: BlockTag,
     onlyTopCall = false,
 ): Promise<CallTrace[]> {
-    const parsedBlock = provider._getBlockTag(blockTag) as string;
+    const parsedBlock = (blockTag ? provider._getBlockTag(blockTag) : 'latest') as string;
 
     const method = parsedBlock.length === 66 ? 'debug_traceBlockByHash' : 'debug_traceBlockByNumber';
 
     const [block, resp] = await Promise.all([
-        typeof blockTag === 'number' ? { number: blockTag, hash: undefined } : provider.getBlock(blockTag),
+        typeof blockTag === 'number' ? { number: blockTag, hash: undefined } : provider.getBlock(parsedBlock),
         provider.send(method, [
             parsedBlock,
             {
@@ -72,6 +89,14 @@ export async function traceBlock(
     );
 }
 
+/**
+ * Traces a single transaction's internal execution via debug_traceTransaction.
+ * @param provider Provider instance.
+ * @param hash Transaction hash to trace.
+ * @param onlyTopCall If true, limit to top-level call.
+ * @param txResp Optionally a preloaded transaction response.
+ * @returns Structured CallTrace.
+ */
 export async function traceTransaction(
     provider: JsonRpcProvider,
     hash: string,

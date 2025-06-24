@@ -8,7 +8,7 @@ import { ethers } from '../../ethers';
 const { Contract, Interface } = ethers;`;
 
 async function start() {
-    const files = (await readdir(replaceDir)).map(file => path.join(replaceDir, file));
+    const files = (await readdir(replaceDir)).map((file) => path.join(replaceDir, file));
 
     for (const file of files) {
         const context = await readFile(file, { encoding: 'utf8' });

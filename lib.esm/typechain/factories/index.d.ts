@@ -1,6 +1,8 @@
 export { CreateX__factory } from "./CreateX__factory";
+export { DataFeed__factory } from "./DataFeed__factory";
 export { ERC20__factory } from "./ERC20__factory";
 export { Multicall__factory } from "./Multicall__factory";
 export { OffchainOracle__factory } from "./OffchainOracle__factory";
 export { OpGasPriceOracle__factory } from "./OpGasPriceOracle__factory";
 export { Permit2__factory } from "./Permit2__factory";
+export { WETH__factory } from "./WETH__factory";

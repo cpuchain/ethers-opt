@@ -1,1 +1,3 @@
 lib/**/* linguist-vendored
+lib.esm/**/* linguist-vendored
+**/*.sol linguist-language=Solidity

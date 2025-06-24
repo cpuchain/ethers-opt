@@ -1,8 +1,14 @@
+<div class="hero" align="center">
+
+<img src="./ethers-opt3.png">
+
 # ethers-opt
 
-[![NPM Version](https://img.shields.io/npm/v/ethers-opt)](https://www.npmjs.com/package/ethers-opt)
+[![NPM Version](https://img.shields.io/npm/v/ethers-opt)](https://www.npmjs.com/package/ethers-opt) ![Statements](https://img.shields.io/badge/statements-86.56%25-brightgreen.svg?style=flat)
 
 Collection of heavily optimized functions for ethers.js V6
+
+</div>
 
 ### Features
 
@@ -24,13 +30,15 @@ Collection of heavily optimized functions for ethers.js V6
 
 ### TO-DO
 
-- [] Test cases
+- [x] Test cases
+
+- [x] Basenames support / Universal Resolver support for ETH ENS
+
+- [] ENS support for alternative chains? ( Like BNB Chain for example )
 
 - [] Test EIP-7702
 
 - [] Example blockchain indexer
-
-- [] ENS support for alternative chains? ( Like BNB Chain / Base for example )
 
 - [] Port for Viem
 
@@ -39,7 +47,7 @@ Collection of heavily optimized functions for ethers.js V6
 ### Quick Start
 
 ```ts
-import { Provider, VoidSigner } from 'ethers-opt';
+import { Provider, ProxySigner } from 'ethers-opt';
 
 async function main() {
     const provider = new Provider('https://rpc.mevblocker.io', undefined, {
@@ -47,13 +55,13 @@ async function main() {
     });
 
     // VoidSigner can't sign but useful to populate transaction objects btw
-    const signer = new VoidSigner((await provider.resolveName('vitalik.eth') as string), provider);
+    const signer = ProxySigner.fromAddress((await provider.resolveName('vitalik.eth') as string), provider);
 
     console.log(await signer.populateTransaction({ to: signer.address, value: 0n }));
 }
 main();
 ```
 
-### Examples
+### Integrations
 
 - [Web Wallet](https://github.com/cpuchain/cpuchain-wallet) - Open source browser side web wallet

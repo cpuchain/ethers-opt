@@ -14,9 +14,10 @@
         "skipLibCheck": true
     },
     "include": [
+        "ignition",
+        "scripts",
         "src",
         "test",
-        "scripts"
     ],
     "exclude": ["node_modules"],
     "files": ["./hardhat.config.ts"]

@@ -11,6 +11,13 @@ export interface BlockHash {
     hash?: string;
 }
 
+/**
+ * Fetches recent block hashes, using multicall when possible for efficiency.
+ * @param provider The provider (optionally with multicall).
+ * @param knownBlock Optional: block to start from (defaults to latest).
+ * @param depth Optional: how many blocks to look back (default 80).
+ * @returns Array of BlockHash {number, hash}.
+ */
 export async function fetchBlockHashes(
     provider: Provider & { multicall?: Multicall },
     knownBlock?: number,
@@ -55,7 +62,10 @@ export async function fetchBlockHashes(
 }
 
 /**
- * Retuns reorged block or else undefined
+ * Returns the first block number where the hashes from two sources disagree (detects reorgs).
+ * @param fromLocal Locally cached block hashes.
+ * @param fromNode Current chain block hashes.
+ * @returns The reorged block number, or undefined if chains match.
  */
 export function compareBlockHashes(fromLocal: BlockHash[], fromNode: BlockHash[]): number | undefined {
     fromLocal = fromLocal.sort((a, b) => a.number - b.number);

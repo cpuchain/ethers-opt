@@ -19,7 +19,7 @@ export const ensUniversalResolvers: Record<number, string> = {
 };
 
 export const ensStaticResolvers: Record<number, string> = {
-    // Using universal resolvers because they are also capable of quering custom resolves on behalf
+    // Using universal resolvers because they are also capable of querying custom resolves on behalf
     // (so that you don't need to know the exact resolver it works like a router contract)
     ...ensUniversalResolvers,
     // Known main resolver for ENS like registries where universal resolver isn't available

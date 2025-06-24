@@ -1,17 +1,27 @@
-import type { Provider, Signer, Signature } from 'ethers';
+import type { Provider, Signature } from 'ethers';
 import { ethers } from './ethers';
 import type { ERC20 } from './typechain';
+import type { SignerWithAddress } from './signer';
 
 const { Signature: ethSignature, MaxUint256 } = ethers;
 
+/**
+ * Create an EIP-2612 permit signature for an ERC20 token from a signer.
+ * @param erc20 ERC20 contract instance (with Permit support).
+ * @param spenderOrSigner Address to approve allowance for (as string or SignerWithAddress).
+ * @param value Maximum token amount to approve (default: MaxUint256).
+ * @param deadline Permit signature deadline (default: MaxUint256, i.e. infinite).
+ * @returns Promise resolving to an ethers Signature instance.
+ */
 export async function permit(
     erc20: unknown,
-    spender: string,
+    spenderOrSigner: string | SignerWithAddress,
     value: bigint = MaxUint256,
-    deadline: bigint = MaxUint256,
+    deadline: number | bigint = MaxUint256,
 ): Promise<Signature> {
     const token = erc20 as ERC20;
-    const signer = token.runner as Signer & { address: string };
+    const spender = ((spenderOrSigner as SignerWithAddress)?.address || spenderOrSigner) as string;
+    const signer = token.runner as SignerWithAddress;
 
     const [name, nonce, { chainId }] = await Promise.all([
         token.name(),

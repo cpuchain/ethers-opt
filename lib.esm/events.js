@@ -4,9 +4,17 @@ exports.multiQueryFilter = multiQueryFilter;
 const ethers_1 = require("./ethers");
 const { EventLog, UndecodedEventLog, Log } = ethers_1.ethers;
 /**
- * Provide historic access to event data for event in the range fromBlock (default: 0) to toBlock (default: "latest") inclusive.
+ * Queries for event logs (optionally decoded) from provider or contract, in an arbitrary block range.
+ * Supports basic topic and address filtering. If `address === '*'` scans the entire blockchain.
  *
- * If address === '*' will scan for entire blockchain
+ * @param args
+ *   - address: Address(es) to filter on (optional).
+ *   - provider: Provider to use (optional).
+ *   - contract: Contract instance for decoding (optional).
+ *   - event: The event signature/name (optional).
+ *   - fromBlock: Start of block range (default: 0).
+ *   - toBlock: End of block range (default: 'latest').
+ * @returns Array of EventLog, UndecodedEventLog, or Log objects.
  */
 async function multiQueryFilter({ address, provider, contract, event, fromBlock, toBlock, }) {
     if (!address && contract) {
@@ -16,7 +24,7 @@ async function multiQueryFilter({ address, provider, contract, event, fromBlock,
         address = undefined;
     }
     if (!provider && contract) {
-        provider = contract.runner;
+        provider = (contract.runner?.provider || contract.runner);
     }
     if (!event) {
         event = '*';

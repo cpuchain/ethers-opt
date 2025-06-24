@@ -28,6 +28,7 @@ __exportStar(require("./multicall"), exports);
 __exportStar(require("./op"), exports);
 __exportStar(require("./permit"), exports);
 __exportStar(require("./price"), exports);
+__exportStar(require("./proof"), exports);
 __exportStar(require("./provider"), exports);
 __exportStar(require("./signer"), exports);
 __exportStar(require("./traceBlock"), exports);

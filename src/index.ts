@@ -12,6 +12,7 @@ export * from './multicall';
 export * from './op';
 export * from './permit';
 export * from './price';
+export * from './proof';
 export * from './provider';
 export * from './signer';
 export * from './traceBlock';

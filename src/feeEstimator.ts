@@ -1,4 +1,11 @@
-// https://www.alchemy.com/docs/how-to-build-a-gas-fee-estimator-using-eip-1559
+/**
+ * https://www.alchemy.com/docs/how-to-build-a-gas-fee-estimator-using-eip-1559
+ */
+import type { FeeData } from 'ethers';
+
+/**
+ * Response from eth_feeHistory.
+ */
 export interface FeeHistoryResp {
     oldestBlock?: string;
     baseFeePerGas?: string[];
@@ -8,6 +15,9 @@ export interface FeeHistoryResp {
     blobGasUsedRatio?: number[];
 }
 
+/**
+ * Details for a single block from fee history.
+ */
 export interface FeeHistoryBlock {
     number: number | string;
     gasUsedRatio: number;
@@ -15,12 +25,23 @@ export interface FeeHistoryBlock {
     priorityFeePerGas: bigint[];
 }
 
+/**
+ * Format of fee history, aggregated for analysis.
+ */
 export interface FormattedFeeHistory {
     blocks: FeeHistoryBlock[];
     baseFeePerGasAvg: bigint;
     priorityFeePerGasAvg: bigint[];
 }
 
+/**
+ * Formats the `eth_feeHistory` response into an array of historical fee blocks,
+ * and computes averages.
+ * @param result Original response.
+ * @param historicalBlocks How many blocks to include.
+ * @param includePending Whether or not to add a 'pending' pseudo-block.
+ * @returns Parsed fee history object with average calculations.
+ */
 export function formatFeeHistory(
     result: FeeHistoryResp,
     historicalBlocks: number,
@@ -64,7 +85,7 @@ export function formatFeeHistory(
                 }
             });
 
-            if ((blocks.length = index + 1)) {
+            if (blocks.length === index + 1) {
                 acc.baseFeePerGasAvg = acc.baseFeePerGasAvg / BigInt(blocks.length);
                 acc.priorityFeePerGasAvg = acc.priorityFeePerGasAvg.map((gas) => {
                     return gas ? gas / BigInt(blocks.length) : 0n;
@@ -84,4 +105,21 @@ export function formatFeeHistory(
         baseFeePerGasAvg,
         priorityFeePerGasAvg,
     };
+}
+
+/**
+ * Computes a suitable gas price from FeeData for EIP1559 or legacy transactions.
+ * @param feeData FeeData object as returned by Provider.
+ * @returns The appropriate gas price.
+ */
+export function getGasPrice(feeData: FeeData): bigint {
+    if (feeData.maxFeePerGas) {
+        const maxPriorityFeePerGas = feeData.maxPriorityFeePerGas || 0n;
+        const maxFeePerGas =
+            feeData.maxFeePerGas <= maxPriorityFeePerGas ? maxPriorityFeePerGas + 10n : feeData.maxFeePerGas;
+
+        return maxFeePerGas + maxPriorityFeePerGas;
+    }
+
+    return feeData.gasPrice || 0n;
 }

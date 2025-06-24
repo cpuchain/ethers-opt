@@ -16,9 +16,19 @@ function toJson(value) {
     }
     return value.toString();
 }
+/**
+ * Extension of ethers' FeeData for more granular priority fee tracking.
+ */
 class FeeDataExt extends ethFeeData {
     maxPriorityFeePerGasSlow;
     maxPriorityFeePerGasMedium;
+    /**
+     * @param gasPrice The gas price or null.
+     * @param maxFeePerGas The EIP-1559 max fee per gas.
+     * @param maxPriorityFeePerGas The max priority fee per gas.
+     * @param maxPriorityFeePerGasSlow Optional: Lower percentile priority fee.
+     * @param maxPriorityFeePerGasMedium Optional: Medium percentile priority fee.
+     */
     constructor(gasPrice, maxFeePerGas, maxPriorityFeePerGas, maxPriorityFeePerGasSlow, maxPriorityFeePerGasMedium) {
         super(gasPrice, maxFeePerGas, maxPriorityFeePerGas);
         defineProperties(this, {
@@ -48,11 +58,13 @@ class FeeDataExt extends ethFeeData {
 }
 exports.FeeDataExt = FeeDataExt;
 /**
- * Static network & Multicaller by default
+ * Enhanced Ethers Provider with Multicall, static network detection, batch fee data, and ENS support.
  *
+ * (Which comes with static network, multicaller enabled by defaut)
  * (Multicaller inspired by https://github.com/ethers-io/ext-provider-multicall)
  */
 class Provider extends ethJsonRpcProvider {
+    hardhatProvider;
     staticNetwork;
     #network;
     ensResolver;
@@ -68,6 +80,12 @@ class Provider extends ethJsonRpcProvider {
     multicallStallTime;
     multicallQueue;
     multicallTimer;
+    /**
+     * Create a new Provider.
+     * @param url RPC URL or FetchRequest.
+     * @param network Networkish.
+     * @param options Provider options.
+     */
     constructor(url, network, options) {
         // 30ms (default)
         const multicallStallTime = options?.multicallStallTime ?? 30;
@@ -77,10 +95,14 @@ class Provider extends ethJsonRpcProvider {
             ...(options || {}),
             batchStallTime,
         });
+        this.hardhatProvider = options?.hardhatProvider;
         this.feeHistory = options?.feeHistory ?? false;
         this.staticNetwork = (async () => {
             if (network) {
                 return ethNetwork.from(network);
+            }
+            if (options?.hardhatProvider) {
+                return ethNetwork.from(await options.hardhatProvider.getNetwork());
             }
             const _network = ethNetwork.from(await new ethJsonRpcProvider(url).getNetwork());
             if (options?.chainId && BigInt(_network.chainId) !== BigInt(options.chainId)) {
@@ -98,7 +120,7 @@ class Provider extends ethJsonRpcProvider {
             if (ensType === 'ENS') {
                 return ens_1.EnsResolver;
             }
-            throw new Error('Unsupported EMS type');
+            throw new Error('Unsupported ENS type');
         });
         this.multicall = typechain_1.Multicall__factory.connect(options?.multicall || multicall_1.MULTICALL_ADDRESS, this);
         this.multicallAllowFailure = options?.multicallAllowFailure ?? true;
@@ -107,10 +129,12 @@ class Provider extends ethJsonRpcProvider {
         this.multicallQueue = [];
         this.multicallTimer = null;
     }
+    /** Gets the detected or static network. */
     get _network() {
         (0, ethers_1.assert)(this.#network, 'network is not available yet', 'NETWORK_ERROR');
         return this.#network;
     }
+    /** @override Resolves to the network, or throws and ensures auto-destroy on error. */
     async _detectNetwork() {
         try {
             return await this.staticNetwork;
@@ -130,6 +154,8 @@ class Provider extends ethJsonRpcProvider {
      *
      * Note that in some networks (like L2), maxFeePerGas can be smaller than maxPriorityFeePerGas and if so,
      * using the value as is could throw an error from RPC as maxFeePerGas should be always bigger than maxPriorityFeePerGas
+     *
+     * @returns Promise resolving to FeeDataExt instance.
      */
     async getFeeData() {
         const [gasPrice, maxFeePerGas, maxPriorityFeePerGas, [maxPriorityFeePerGasMedium, maxPriorityFeePerGasSlow],] = await Promise.all([
@@ -170,17 +196,27 @@ class Provider extends ethJsonRpcProvider {
         return new FeeDataExt(gasPrice, maxFeePerGas, maxPriorityFeePerGas, maxPriorityFeePerGasMedium, maxPriorityFeePerGasSlow);
     }
     /**
-     * Override EnsResolver to use our optimized resolver class object
+     * Returns the ENS resolver for the specified name.
+     * @param name ENS name to resolve.
+     * @returns Resolves to an EnsResolver or null.
      */
     async getResolver(name) {
         return (await this.ensResolver).fromName(this, name);
     }
+    /**
+     * Performs a reverse-lookup (address to ENS, if any).
+     * @param address Address to lookup.
+     * @param reverseCheck Perform confirmation roundtrip.
+     * @returns ENS name or null.
+     */
     async lookupAddress(address, reverseCheck) {
         return (await this.ensResolver).lookupAddress(this, address, reverseCheck);
     }
     /**
-     * Wrapper around waitForTransaction to have default confirmation
-     * Doesn't throw on timeout and instead returns null
+     * Waits for specified transaction (or hash) to confirm, with default timeout.
+     * Does not throw on timeout.
+     * @param hashOrTx TransactionResponse or hash or null.
+     * @returns Null or the TransactionReceipt if confirmed.
      */
     async wait(hashOrTx) {
         try {
@@ -194,12 +230,38 @@ class Provider extends ethJsonRpcProvider {
             return null;
         }
     }
+    /**
+     * Returns whether an address has code (i.e., is a contract) on-chain.
+     * @param address Address to check.
+     * @returns True if code exists (contract), false otherwise.
+     */
+    async hasCode(address) {
+        const code = await this.getCode(address);
+        return code && code !== '0x' ? true : false;
+    }
+    /**
+     * Gets receipts for all transactions in a block as an array.
+     * @param blockTag Block to query.
+     * @returns Promise resolving to an array of TransactionReceipts.
+     */
     async getBlockReceipts(blockTag) {
         return (0, blockReceipts_1.getBlockReceipts)(this, blockTag, this.#network);
     }
+    /**
+     * Trace internal calls for a whole block.
+     * @param blockTag Block to trace.
+     * @param onlyTopCall If true, only trace top-level calls.
+     * @returns Array of CallTrace objects for each transaction in the block.
+     */
     async traceBlock(blockTag, onlyTopCall) {
         return (0, traceBlock_1.traceBlock)(this, blockTag, onlyTopCall);
     }
+    /**
+     * Trace internal calls for a given transaction hash.
+     * @param hash Transaction hash.
+     * @param onlyTopCall If true, only trace the top-level call.
+     * @returns CallTrace object for the traced transaction.
+     */
     async traceTransaction(hash, onlyTopCall) {
         return (0, traceBlock_1.traceTransaction)(this, hash, onlyTopCall);
     }
@@ -236,6 +298,12 @@ class Provider extends ethJsonRpcProvider {
             this.multicallTimer = null;
         }
     }
+    /**
+     * Queue a Multicall aggregate3 call (internal).
+     * @private
+     * @param to Call target address.
+     * @param data Calldata.
+     */
     _queueCall(to, data = '0x') {
         if (!this.multicallTimer) {
             this.multicallTimer = setTimeout(() => {
@@ -264,6 +332,17 @@ class Provider extends ethJsonRpcProvider {
             }
         }
         return super._perform(req);
+    }
+    /**
+     * For Hardhat test environments, reroutes .send() calls to the in-memory provider.
+     * @override
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async send(method, params) {
+        if (this.hardhatProvider) {
+            return this.hardhatProvider.send(method, params);
+        }
+        return super.send(method, params);
     }
 }
 exports.Provider = Provider;

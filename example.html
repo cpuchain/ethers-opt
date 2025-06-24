@@ -87,7 +87,7 @@
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.14.3/dist/ethers.umd.min.js"></script>
 <script src="./lib/ethersOpt.umd.js"></script>
 <script>
-const { Provider, VoidSigner } = ethersOpt;
+const { Provider, ProxySigner } = ethersOpt;
 
 const provider = new Provider('https://rpc.mevblocker.io');
 const ERC20_ABI = [
@@ -170,7 +170,7 @@ $('#txForm').on('submit', async function(e) {
 
     try {
         let txPopulated;
-        const voidSigner = new VoidSigner(from, provider);
+        const voidSigner = ProxySigner.fromAddress(from, provider);
 
         if (tokenAddr) {
             const token = new ethers.Contract(tokenAddr, ERC20_ABI, provider);
