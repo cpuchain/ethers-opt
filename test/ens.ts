@@ -1,6 +1,6 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
-import { ensRegistries, EnsResolver, Provider } from '../src';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, beforeAll, expect, it } from 'vitest';
+import { ensRegistries, EnsResolver, Provider } from '../src/index.js';
 
 const ETH_RPC = 'https://rpc.mevblocker.io';
 const ENS_ETH = 'ens.eth';
@@ -14,7 +14,7 @@ describe('ens.ts', function () {
         return { provider };
     };
 
-    before('get resolver for vitalik.eth', async function () {
+    beforeAll(async function () {
         const { provider } = await loadFixture(ensFixture);
 
         const _resolver = (await EnsResolver.fromName(provider, ENS_ETH)) as EnsResolver;

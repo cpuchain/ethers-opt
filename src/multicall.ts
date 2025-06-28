@@ -1,6 +1,6 @@
 import type { BaseContract, Interface, Overrides } from 'ethers';
-import type { Overrides as typeOverrides } from './typechain/common';
-import type { Multicall } from './typechain';
+import type { Overrides as typeOverrides } from './typechain/common.js';
+import type { Multicall } from './typechain/index.js';
 
 export const MULTICALL_ADDRESS = '0xcA11bde05977b3631167028862bE2a173976CA11';
 

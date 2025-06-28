@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   IERC5267,
   IERC5267Interface,
-} from "../../../../@openzeppelin/contracts/interfaces/IERC5267";
+} from "../../../../@openzeppelin/contracts/interfaces/IERC5267.js";
 
 const _abi = [
   {

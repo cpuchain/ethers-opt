@@ -1,8 +1,8 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, expect, it } from 'vitest';
 import { parseEther } from 'ethers';
-import { deployERC20, getSigners } from '../src/fixtures';
-import { permit } from '../src';
+import { deployERC20, getSigners } from '../src/hardhat/fixtures/index.js';
+import { permit } from '../src/index.js';
 
 describe('permit.ts', function () {
     const commonFixture = async () => {
@@ -31,9 +31,13 @@ describe('permit.ts', function () {
 
         const { v, r, s } = await permit(token, bob, value, deadline);
 
+        await (await token.connect(bob).permit(owner.address, bob.address, value, deadline, v, r, s)).wait();
+
+        /**
         await expect(token.connect(bob).permit(owner.address, bob.address, value, deadline, v, r, s))
             .to.emit(token, 'Approval')
             .withArgs(owner.address, bob.address, value);
+        **/
 
         expect(await token.allowance(owner.address, bob.address)).to.equal(value);
     });

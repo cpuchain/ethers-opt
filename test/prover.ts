@@ -1,13 +1,13 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { AbiCoder, keccak256 } from 'ethers';
-import { ERC20__factory, Provider, EthersBatcher, getAggregatorRoundId, getChainlink } from '../src';
-import { verifyChainlinkProof, verifyERC20Proof } from '../src/prover';
+import { ERC20__factory, Provider, EthersBatcher, getAggregatorRoundId, getChainlink } from '../src/index.js';
+import { verifyChainlinkProof, verifyERC20Proof } from '../src/prover/index.js';
 
 const RPS = 10;
 const BATCH_SIZE = 2;
 
-const ETH_RPC = 'https://1rpc.io/eth';
+const ETH_RPC = 'https://ethereum.keydonix.com/v1/mainnet';
 const USDT_ADDRESS = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
 
 const abiEncoder = AbiCoder.defaultAbiCoder();
@@ -28,7 +28,7 @@ describe('prover.ts', function () {
         return { provider, usdt, batcher };
     };
 
-    before('find vitalik.eth address', async function () {
+    beforeAll(async function () {
         const provider = new Provider(ETH_RPC);
 
         vitalikAddress = (await provider.resolveName('vitalik.eth')) as string;

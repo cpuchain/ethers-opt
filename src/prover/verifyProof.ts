@@ -1,11 +1,11 @@
 import { verifyMerkleProof } from '@ethereumjs/mpt';
 import { RLP } from '@ethereumjs/rlp';
 import { Provider, keccak256, getBytes, toBigInt, AbiCoder, toNumber, hexlify } from 'ethers';
-import { DataFeed, ERC20 } from '../typechain';
-import { EIP1186Proof, getProof } from '../proof';
-import { SignerWithAddress } from '../signer';
-import { toEvenHex } from '../utils';
-import { getAggregatorRoundId, RoundData } from '../price';
+import { DataFeed, ERC20 } from '../typechain/index.js';
+import { EIP1186Proof, getProof } from '../proof.js';
+import { SignerWithAddress } from '../signer.js';
+import { toEvenHex } from '../utils.js';
+import { getAggregatorRoundId, RoundData } from '../price.js';
 
 /**
  * Verifies the storage proof for a given contract's storage at a state root.

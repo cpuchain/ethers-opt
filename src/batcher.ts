@@ -10,11 +10,11 @@ import type {
     TransactionReceipt,
     TransactionResponse,
 } from 'ethers';
-import { chunk, createBatchRateConfig, createBlockTags, range, sleep } from './utils';
-import { multiQueryFilter } from './events';
-import { getBlockReceipts } from './blockReceipts';
-import { CallTrace, traceBlock, traceTransaction } from './traceBlock';
-import { getStorageAt } from './proof';
+import { chunk, createBatchRateConfig, createBlockTags, range, sleep } from './utils.js';
+import { multiQueryFilter } from './events.js';
+import { getBlockReceipts } from './blockReceipts.js';
+import { CallTrace, traceBlock, traceTransaction } from './traceBlock.js';
+import { getStorageAt } from './proof.js';
 
 /**
  * Callback describing batch progress during requests.

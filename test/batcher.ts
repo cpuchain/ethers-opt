@@ -1,7 +1,7 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
-import { deployERC20, getSigners } from '../src/fixtures';
-import { EthersBatcher } from '../src';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, expect, it } from 'vitest';
+import { deployERC20, getSigners } from '../src/hardhat/fixtures/index.js';
+import { EthersBatcher } from '../src/index.js';
 
 const RATE_PER_SECOND = 10;
 const BATCH_SIZE = 5;
@@ -29,7 +29,7 @@ describe('batcher.ts', function () {
         const provider = owner.provider;
         const blockNum = await provider.getBlockNumber();
         const blocks = await batcher.getBlocks(provider, [blockNum, blockNum - 1]);
-        expect(blocks).to.have.length(2);
+        expect(blocks).to.have.length('2');
         expect(blocks[0]).to.have.property('number');
     });
 

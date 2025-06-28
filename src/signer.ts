@@ -1,4 +1,4 @@
-import type {
+import {
     Signer,
     TransactionRequest,
     TransactionResponse,
@@ -12,13 +12,14 @@ import type {
     JsonRpcApiProvider,
     JsonRpcSigner,
     SigningKey,
+    resolveProperties,
+    HDNodeWallet,
+    Wallet,
+    VoidSigner,
 } from 'ethers';
-import { ethers } from './ethers';
-import { Provider as WProvider } from './provider';
-import { Multicall, OpGasPriceOracle, OpGasPriceOracle__factory } from './typechain';
-import { getL1Fee } from './op';
-
-const { resolveProperties, JsonRpcSigner: ethJsonRpcSigner, HDNodeWallet, Wallet, VoidSigner } = ethers;
+import { Provider as WProvider } from './provider.js';
+import { Multicall, OpGasPriceOracle, OpGasPriceOracle__factory } from './typechain/index.js';
+import { getL1Fee } from './op.js';
 
 export const HARDHAT_CHAIN = 31337n;
 
@@ -61,7 +62,11 @@ export async function populateTransaction(
     signer: SignerWithAddress,
     tx: TransactionRequestWithFees = {},
 ): Promise<TransactionRequestWithFees> {
-    const provider = (signer.appProvider || signer.provider) as Provider & { multicall?: Multicall };
+    const provider = (signer.appProvider || signer.provider) as Provider & {
+        multicall?: Multicall;
+        multicallMaxCount?: number;
+    };
+    const providerHasMulticall = provider.multicall && Boolean(provider.multicallMaxCount);
     const signerAddress = signer.address || (await signer.getAddress());
 
     const gasPriceBump = (await signer.gasPriceBump?.()) || DEFAULT_GAS_PRICE_BUMP;
@@ -80,9 +85,9 @@ export async function populateTransaction(
             ? undefined
             : provider.getFeeData(),
         typeof tx.nonce === 'number' ? undefined : provider.getTransactionCount(signerAddress, 'pending'),
-        typeof tx.txCost === 'bigint' || !signer.autoValue
+        typeof tx.txCost === 'bigint' || !signer.autoValue || !providerHasMulticall
             ? undefined
-            : (provider.multicall?.getEthBalance || provider.getBalance)(signerAddress),
+            : (provider as WProvider).multicall.getEthBalance(signerAddress),
         tx.l1Fee || !signer.opGasPriceOracle ? 0n : getL1Fee(signer.opGasPriceOracle, tx),
     ]);
 
@@ -311,7 +316,7 @@ export class ProxySigner implements SignerWithAddress {
     }
 
     async sendTransaction(tx: TransactionRequest): Promise<TransactionResponseWithFees> {
-        if (this.parentSigner instanceof ethJsonRpcSigner || this.#wrappedProvider) {
+        if (this.parentSigner instanceof JsonRpcSigner || this.#wrappedProvider) {
             const txObj = await populateTransaction(this, tx);
             const sentTx = (await this.parentSigner.sendTransaction(txObj)) as TransactionResponseWithFees;
             if (txObj.txCost) {

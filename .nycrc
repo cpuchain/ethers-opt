@@ -4,7 +4,7 @@
         "src/**/*.ts"
     ],
     "exclude": [
-        "src/fixtures/**/*.ts",
+        "src/hardhat/**/*.ts",
         "src/typechain/**/*.ts",
         "src/typechain-hardhat/**/*.ts",
         "src/browserProvider.ts",

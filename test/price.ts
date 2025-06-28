@@ -1,5 +1,5 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, expect, it } from 'vitest';
 import { formatEther } from 'ethers';
 import {
     getRateToEth,
@@ -8,7 +8,7 @@ import {
     OFFCHAIN_ORACLE_ADDRESS,
     ERC20__factory,
     Provider,
-} from '../src';
+} from '../src/index.js';
 
 const ETH_RPC = 'https://rpc.mevblocker.io';
 const USDT_ADDRESS = '0xdAC17F958D2ee523a2206206994597C13D831ec7';

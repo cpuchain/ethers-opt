@@ -2,10 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { ContractRunner } from 'ethers';
-import { ethers } from '../../ethers';
-const { Contract, Interface } = ethers;
-import type { ERC20, ERC20Interface } from "../ERC20";
+import { Contract, Interface, type ContractRunner } from "ethers";
+import type { ERC20, ERC20Interface } from "../ERC20.js";
 
 const _abi = [
   {

@@ -1,8 +1,5 @@
-import type { Provider } from 'ethers';
-import { ethers } from './ethers';
-import { type ERC20, type OffchainOracle, DataFeed, DataFeed__factory } from './typechain';
-
-const { formatUnits } = ethers;
+import { Provider, formatUnits } from 'ethers';
+import { type ERC20, type OffchainOracle, DataFeed, DataFeed__factory } from './typechain/index.js';
 
 /**
  * Returns the OffchainOracle (1inch) contract address.

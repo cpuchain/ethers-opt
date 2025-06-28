@@ -2,10 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { ContractRunner } from 'ethers';
-import { ethers } from '../../ethers';
-const { Contract, Interface } = ethers;
-import type { WETH, WETHInterface } from "../WETH";
+import { Contract, Interface, type ContractRunner } from "ethers";
+import type { WETH, WETHInterface } from "../WETH.js";
 
 const _abi = [
   {

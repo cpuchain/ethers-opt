@@ -1,15 +1,14 @@
 import type { EventEmitter } from 'stream';
-import type {
+import {
     Eip1193Provider,
     JsonRpcProvider,
+    BrowserProvider as ethBrowserProvider,
     BrowserProviderOptions,
     Eip6963ProviderInfo,
     JsonRpcSigner,
+    toQuantity,
 } from 'ethers';
-import { ethers } from './ethers';
-import { type ProxySignerOptions, ProxySigner } from './signer';
-
-const { BrowserProvider: ethBrowserProvider, JsonRpcSigner: ethJsonRpcSigner, toQuantity } = ethers;
+import { type ProxySignerOptions, ProxySigner } from './signer.js';
 
 interface Eip6963ProviderDetail {
     info: Eip6963ProviderInfo;
@@ -157,7 +156,7 @@ export class BrowserProvider extends ethBrowserProvider {
             this.ethereum.on('disconnect', this.disconnect);
         }
 
-        return new ProxySigner(new ethJsonRpcSigner(this, signerAddress), {
+        return new ProxySigner(new JsonRpcSigner(this, signerAddress), {
             ...this.options,
             appProvider: this.options?.appProvider || this.appProvider,
         }) as unknown as JsonRpcSigner;

@@ -2,13 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { ContractRunner } from 'ethers';
-import { ethers } from '../../ethers';
-const { Contract, Interface } = ethers;
+import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   OffchainOracle,
   OffchainOracleInterface,
-} from "../OffchainOracle";
+} from "../OffchainOracle.js";
 
 const _abi = [
   {

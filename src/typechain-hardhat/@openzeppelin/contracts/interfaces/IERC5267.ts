@@ -19,7 +19,7 @@ import type {
   TypedLogDescription,
   TypedListener,
   TypedContractMethod,
-} from "../../../common";
+} from "../../../common.js";
 
 export interface IERC5267Interface extends Interface {
   getFunction(nameOrSignature: "eip712Domain"): FunctionFragment;

@@ -1,8 +1,8 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, beforeAll, expect, it } from 'vitest';
 import { formatUnits } from 'ethers';
-import { getSigners } from '../src/fixtures';
-import { getGasPrice, MULTICALL_ADDRESS, Provider, ProxySigner } from '../src';
+import { getSigners } from '../src/hardhat/fixtures/index.js';
+import { getGasPrice, MULTICALL_ADDRESS, Provider, ProxySigner } from '../src/index.js';
 
 const ETH_RPC = 'https://rpc.mevblocker.io';
 const BNB_RPC = 'https://bsc-dataseed.bnbchain.org';
@@ -46,7 +46,7 @@ describe('provider.ts', function () {
         return { provider, signer };
     };
 
-    before('find vitalik.eth address', async function () {
+    beforeAll(async function () {
         const provider = new Provider(ETH_RPC);
 
         vitalikAddress = (await provider.resolveName('vitalik.eth')) as string;

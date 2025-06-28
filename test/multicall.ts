@@ -1,7 +1,7 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
-import { deployERC20, getSigners } from '../src/fixtures';
-import { multicall, Provider } from '../src';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, expect, it } from 'vitest';
+import { deployERC20, getSigners } from '../src/hardhat/fixtures/index.js';
+import { multicall, Provider } from '../src/index.js';
 
 describe('multicall.ts', function () {
     const commonFixture = async () => {

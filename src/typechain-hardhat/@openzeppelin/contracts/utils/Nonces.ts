@@ -18,7 +18,7 @@ import type {
   TypedEventLog,
   TypedListener,
   TypedContractMethod,
-} from "../../../common";
+} from "../../../common.js";
 
 export interface NoncesInterface extends Interface {
   getFunction(nameOrSignature: "nonces"): FunctionFragment;

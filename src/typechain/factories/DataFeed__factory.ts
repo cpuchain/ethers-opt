@@ -2,10 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { ContractRunner } from 'ethers';
-import { ethers } from '../../ethers';
-const { Contract, Interface } = ethers;
-import type { DataFeed, DataFeedInterface } from "../DataFeed";
+import { Contract, Interface, type ContractRunner } from "ethers";
+import type { DataFeed, DataFeedInterface } from "../DataFeed.js";
 
 const _abi = [
   {

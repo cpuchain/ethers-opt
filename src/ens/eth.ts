@@ -1,22 +1,22 @@
-import type { AbstractProvider, EnsPlugin, Provider } from 'ethers';
-import { ethers } from '../ethers';
 import {
-    ensRegistries,
-    ensReverseNode,
-    ensStaticResolvers,
-    ensUniversalResolvers,
-    wildcardResolvers,
-} from './contracts';
-
-const {
-    EnsResolver: ethEnsResolver,
+    AbstractProvider,
+    EnsPlugin,
+    Provider,
+    EnsResolver as ethEnsResolver,
     Contract,
     namehash,
     ZeroAddress,
     isError,
     getAddress,
     dnsEncode,
-} = ethers;
+} from 'ethers';
+import {
+    ensRegistries,
+    ensReverseNode,
+    ensStaticResolvers,
+    ensUniversalResolvers,
+    wildcardResolvers,
+} from './contracts.js';
 
 /**
  * Optimized EnsResolver to support optimized Onchain / Offchain Resolvers within a single contract call if possible

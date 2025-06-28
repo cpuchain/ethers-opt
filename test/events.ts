@@ -1,7 +1,7 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
-import { deployERC20, getSigners } from '../src/fixtures';
-import { multiQueryFilter } from '../src';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, expect, it } from 'vitest';
+import { deployERC20, getSigners } from '../src/hardhat/fixtures/index.js';
+import { multiQueryFilter } from '../src/index.js';
 
 describe('events.ts', function () {
     const commonFixture = async () => {

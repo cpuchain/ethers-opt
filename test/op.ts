@@ -1,8 +1,8 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
-import { getSigners } from '../src/fixtures';
-import { getL1Fee, OpGasPriceOracle__factory } from '../src';
-import { OpGasPriceOracleMock__factory } from '../src/typechain-hardhat';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, expect, it } from 'vitest';
+import { getSigners } from '../src/hardhat/fixtures/index.js';
+import { getL1Fee, OpGasPriceOracle__factory } from '../src/index.js';
+import { OpGasPriceOracleMock__factory } from '../src/typechain-hardhat/index.js';
 
 describe('op.ts', function () {
     const commonFixture = async () => {

@@ -1,8 +1,5 @@
-import type { TransactionRequest } from 'ethers';
-import { ethers } from './ethers';
-import { OpGasPriceOracle } from './typechain';
-
-const { Transaction, parseUnits, parseEther, ZeroAddress } = ethers;
+import { Transaction, TransactionRequest, parseUnits, parseEther, ZeroAddress } from 'ethers';
+import { OpGasPriceOracle } from './typechain/index.js';
 
 /**
  * Address of the OP Stack L1 Gas Price Oracle on standard OP chains.

@@ -9,7 +9,7 @@ import {
   HardhatEthersHelpers as HardhatEthersHelpersBase,
 } from "@nomicfoundation/hardhat-ethers/types";
 
-import * as Contracts from ".";
+import * as Contracts from"./index.js";
 
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
@@ -89,6 +89,10 @@ declare module "hardhat/types/runtime" {
       name: "OpGasPriceOracleMock",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.OpGasPriceOracleMock__factory>;
+    getContractFactory(
+      name: "OwnableTest",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.OwnableTest__factory>;
     getContractFactory(
       name: "ERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -194,6 +198,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.OpGasPriceOracleMock>;
     getContractAt(
+      name: "OwnableTest",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.OwnableTest>;
+    getContractAt(
       name: "ERC20",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -281,6 +290,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.OpGasPriceOracleMock>;
     deployContract(
+      name: "OwnableTest",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.OwnableTest>;
+    deployContract(
       name: "ERC20",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC20>;
@@ -384,6 +397,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.OpGasPriceOracleMock>;
+    deployContract(
+      name: "OwnableTest",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.OwnableTest>;
     deployContract(
       name: "ERC20",
       args: any[],

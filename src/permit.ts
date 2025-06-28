@@ -1,9 +1,6 @@
-import type { Provider, Signature } from 'ethers';
-import { ethers } from './ethers';
-import type { ERC20 } from './typechain';
-import type { SignerWithAddress } from './signer';
-
-const { Signature: ethSignature, MaxUint256 } = ethers;
+import { Signature, MaxUint256, Provider } from 'ethers';
+import type { ERC20 } from './typechain/index.js';
+import type { SignerWithAddress } from './signer.js';
 
 /**
  * Create an EIP-2612 permit signature for an ERC20 token from a signer.
@@ -29,7 +26,7 @@ export async function permit(
         (signer.provider as Provider).getNetwork(),
     ]);
 
-    return ethSignature.from(
+    return Signature.from(
         await signer.signTypedData(
             {
                 name,

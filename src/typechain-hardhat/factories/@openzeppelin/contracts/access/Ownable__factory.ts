@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   Ownable,
   OwnableInterface,
-} from "../../../../@openzeppelin/contracts/access/Ownable";
+} from "../../../../@openzeppelin/contracts/access/Ownable.js";
 
 const _abi = [
   {

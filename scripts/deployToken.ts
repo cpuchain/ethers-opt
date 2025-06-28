@@ -1,6 +1,6 @@
 import { parseUnits } from 'ethers';
-import { getSigners } from '../src/fixtures';
-import { ERC20Mock__factory } from '../src/typechain-hardhat';
+import { getSigners } from '../src/hardhat/fixtures/index.js';
+import { ERC20Mock__factory } from '../src/typechain-hardhat/index.js';
 
 const TOKEN_NAME = process.env.TOKEN_NAME || 'Test Token';
 const TOKEN_SYMBOL = process.env.TOKEN_SYMBOL || 'TST';

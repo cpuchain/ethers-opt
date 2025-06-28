@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   IERC20Permit,
   IERC20PermitInterface,
-} from "../../../../../../@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit";
+} from "../../../../../../@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.js";
 
 const _abi = [
   {

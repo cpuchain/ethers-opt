@@ -1,8 +1,8 @@
 import { writeFile } from 'fs/promises';
 import { Logger } from '@cpuchain/logger';
 import { EventLog } from 'ethers';
-import { EthersBatcher, Provider } from '../src';
-import { ERC20__factory } from '../src/typechain-hardhat';
+import { EthersBatcher, Provider } from '../src/index.js';
+import { ERC20__factory } from '../src/typechain-hardhat/index.js';
 
 const RPS = 15;
 const EVENT_RANGE = 10000;

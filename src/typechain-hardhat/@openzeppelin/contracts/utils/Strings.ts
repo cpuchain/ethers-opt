@@ -14,7 +14,7 @@ import type {
   TypedDeferredTopicFilter,
   TypedEventLog,
   TypedListener,
-} from "../../../common";
+} from "../../../common.js";
 
 export interface StringsInterface extends Interface {}
 

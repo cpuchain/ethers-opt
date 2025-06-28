@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   IERC20Errors,
   IERC20ErrorsInterface,
-} from "../../../../../@openzeppelin/contracts/interfaces/draft-IERC6093.sol/IERC20Errors";
+} from "../../../../../@openzeppelin/contracts/interfaces/draft-IERC6093.sol/IERC20Errors.js";
 
 const _abi = [
   {

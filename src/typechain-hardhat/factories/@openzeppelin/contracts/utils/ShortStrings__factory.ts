@@ -8,11 +8,11 @@ import {
   Interface,
 } from "ethers";
 import type { Signer, ContractDeployTransaction, ContractRunner } from "ethers";
-import type { NonPayableOverrides } from "../../../../common";
+import type { NonPayableOverrides } from "../../../../common.js";
 import type {
   ShortStrings,
   ShortStringsInterface,
-} from "../../../../@openzeppelin/contracts/utils/ShortStrings";
+} from "../../../../@openzeppelin/contracts/utils/ShortStrings.js";
 
 const _abi = [
   {
@@ -34,7 +34,7 @@ const _abi = [
 ] as const;
 
 const _bytecode =
-  "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122064cd737b45748163efc12c70e8bb067502bed98735ff34e77553bc1ea73b751264736f6c634300081e0033";
+  "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220f7913f6d1b122c0634dc13eb065151f4b8d56512a8af08ebbb0515d708f8696164736f6c634300081e0033";
 
 type ShortStringsConstructorParams =
   | [signer?: Signer]

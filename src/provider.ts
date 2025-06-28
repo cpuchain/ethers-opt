@@ -1,4 +1,4 @@
-import type {
+import {
     BlockTag,
     Network,
     Networkish,
@@ -9,23 +9,19 @@ import type {
     PerformActionRequest,
     TransactionReceipt,
     TransactionResponse,
-} from 'ethers';
-import { ethers, assert } from './ethers';
-import { Multicall, Multicall__factory } from './typechain';
-import { MULTICALL_ADDRESS } from './multicall';
-import { chainNames, EnsResolver } from './ens';
-import { formatFeeHistory } from './feeEstimator';
-import { chunk, sleep } from './utils';
-import { CallTrace, traceBlock, traceTransaction } from './traceBlock';
-import { getBlockReceipts } from './blockReceipts';
-
-const {
+    assert,
     AbiCoder,
-    JsonRpcProvider: ethJsonRpcProvider,
-    Network: ethNetwork,
-    FeeData: ethFeeData,
+    JsonRpcProvider,
+    FeeData,
     defineProperties,
-} = ethers;
+} from 'ethers';
+import { Multicall, Multicall__factory } from './typechain/index.js';
+import { MULTICALL_ADDRESS } from './multicall.js';
+import { chainNames, EnsResolver } from './ens/index.js';
+import { formatFeeHistory } from './feeEstimator.js';
+import { chunk, sleep } from './utils.js';
+import { CallTrace, traceBlock, traceTransaction } from './traceBlock.js';
+import { getBlockReceipts } from './blockReceipts.js';
 
 /**
  * Result for a single Multicall call.
@@ -56,7 +52,7 @@ function toJson(value: null | bigint): null | string {
 /**
  * Extension of ethers' FeeData for more granular priority fee tracking.
  */
-export class FeeDataExt extends ethFeeData {
+export class FeeDataExt extends FeeData {
     readonly maxPriorityFeePerGasSlow!: null | bigint;
 
     readonly maxPriorityFeePerGasMedium!: null | bigint;
@@ -131,7 +127,7 @@ export interface ProviderOptions extends JsonRpcApiProviderOptions {
  * (Which comes with static network, multicaller enabled by defaut)
  * (Multicaller inspired by https://github.com/ethers-io/ext-provider-multicall)
  */
-export class Provider extends ethJsonRpcProvider {
+export class Provider extends JsonRpcProvider {
     hardhatProvider?: ethProvider;
 
     staticNetwork: Promise<Network>;
@@ -177,14 +173,14 @@ export class Provider extends ethJsonRpcProvider {
 
         this.staticNetwork = (async () => {
             if (network) {
-                return ethNetwork.from(network);
+                return Network.from(network);
             }
 
             if (options?.hardhatProvider) {
-                return ethNetwork.from(await options.hardhatProvider.getNetwork());
+                return Network.from(await options.hardhatProvider.getNetwork());
             }
 
-            const _network = ethNetwork.from(await new ethJsonRpcProvider(url).getNetwork());
+            const _network = Network.from(await new JsonRpcProvider(url).getNetwork());
 
             if (options?.chainId && BigInt(_network.chainId) !== BigInt(options.chainId)) {
                 throw new Error('Wrong network');

@@ -1,7 +1,4 @@
-import type { JsonRpcProvider, BlockTag, BlockParams, TransactionResponse } from 'ethers';
-import { ethers } from './ethers';
-
-const { getAddress } = ethers;
+import { JsonRpcProvider, BlockTag, BlockParams, TransactionResponse, getAddress } from 'ethers';
 
 /**
  * Details for a call trace (internal transaction) within a transaction or block.

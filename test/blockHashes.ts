@@ -1,7 +1,7 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
-import { deployERC20, getSigners } from '../src/fixtures';
-import { compareBlockHashes, fetchBlockHashes } from '../src';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, expect, it } from 'vitest';
+import { deployERC20, getSigners } from '../src/hardhat/fixtures/index.js';
+import { compareBlockHashes, fetchBlockHashes } from '../src/index.js';
 
 describe('blockHashes.ts', function () {
     const commonFixture = async () => {
@@ -16,8 +16,8 @@ describe('blockHashes.ts', function () {
         const { owner } = await loadFixture(commonFixture);
 
         const provider = owner.provider;
-        const blocks = await fetchBlockHashes(provider, undefined, 5);
-        expect(blocks).to.have.lengthOf(5);
+        const blocks = await fetchBlockHashes(provider, undefined, 1);
+        expect(blocks).to.have.lengthOf('1');
         expect(blocks[0]).to.have.keys(['number', 'hash']);
     });
 

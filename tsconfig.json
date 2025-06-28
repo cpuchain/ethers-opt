@@ -5,9 +5,9 @@
         ],
         "target": "ES2022",
         "lib": ["ES2016", "ES2021", "ES2022", "DOM", "ESNext"],
-        "module": "CommonJS",
-        "outDir": "./lib",
-        "resolveJsonModule": true,
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "resolveJsonModule": false,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
@@ -20,5 +20,5 @@
         "test",
     ],
     "exclude": ["node_modules"],
-    "files": ["./hardhat.config.ts"]
+    "files": ["hardhat.config.cts"]
 }

@@ -8,11 +8,11 @@ import {
   Interface,
 } from "ethers";
 import type { Signer, ContractDeployTransaction, ContractRunner } from "ethers";
-import type { NonPayableOverrides } from "../../../../../common";
+import type { NonPayableOverrides } from "../../../../../common.js";
 import type {
   ECDSA,
   ECDSAInterface,
-} from "../../../../../@openzeppelin/contracts/utils/cryptography/ECDSA";
+} from "../../../../../@openzeppelin/contracts/utils/cryptography/ECDSA.js";
 
 const _abi = [
   {
@@ -45,7 +45,7 @@ const _abi = [
 ] as const;
 
 const _bytecode =
-  "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220a3ab3c66d00b9380e9f7d0a98ee167fd45b09b53f7c10657d30e18188fc4898364736f6c634300081e0033";
+  "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220651c9e8ca5b6470d8a97c08ed39d1b4c3d728037b9bc05cd3db2f3cdc9dba4b064736f6c634300081e0033";
 
 type ECDSAConstructorParams =
   | [signer?: Signer]

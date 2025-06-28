@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   ERC20,
   ERC20Interface,
-} from "../../../../../@openzeppelin/contracts/token/ERC20/ERC20";
+} from "../../../../../@openzeppelin/contracts/token/ERC20/ERC20.js";
 
 const _abi = [
   {

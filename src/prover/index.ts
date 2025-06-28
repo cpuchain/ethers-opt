@@ -1,2 +1,2 @@
 // Should not be bundled for web included for nodejs prover
-export * from './verifyProof';
+export * from './verifyProof.js';

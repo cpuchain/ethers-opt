@@ -4,7 +4,7 @@
 
 # ethers-opt
 
-[![NPM Version](https://img.shields.io/npm/v/ethers-opt)](https://www.npmjs.com/package/ethers-opt) ![Statements](https://img.shields.io/badge/statements-86.56%25-brightgreen.svg?style=flat)
+[![NPM Version](https://img.shields.io/npm/v/ethers-opt)](https://www.npmjs.com/package/ethers-opt) ![Statements](https://img.shields.io/badge/statements-84.54%25-brightgreen.svg?style=flat)
 
 Collection of heavily optimized functions for ethers.js V6
 
@@ -13,6 +13,8 @@ Collection of heavily optimized functions for ethers.js V6
 ### Features
 
 - Various functions and classes extending utility of ethers.js
+
+- Custom fixtures / tasks for hardhat to improve scripting (for more info see [./src/hardhat/README.md](./src/hardhat/README.md))
 
 - Inherited classes ( Provider, Signer ) to address multiple known issues of ethers.js
 
@@ -35,6 +37,10 @@ Collection of heavily optimized functions for ethers.js V6
 - [x] Basenames support / Universal Resolver support for ETH ENS
 
 - [] ENS support for alternative chains? ( Like BNB Chain for example )
+
+- [] Optimism Deposit / Withdrawal ( aka Fault Proof )
+
+- [] Arbitrum Deposit / Withdrawal
 
 - [] Test EIP-7702
 

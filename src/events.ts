@@ -1,7 +1,16 @@
-import type { BaseContract, ContractEventName, BlockTag, Provider, TopicFilter, EventFragment } from 'ethers';
-import { ethers, assert, getSubInfo } from './ethers';
-
-const { EventLog, UndecodedEventLog, Log } = ethers;
+import {
+    BaseContract,
+    ContractEventName,
+    BlockTag,
+    Provider,
+    TopicFilter,
+    EventFragment,
+    assert,
+    EventLog,
+    UndecodedEventLog,
+    Log,
+} from 'ethers';
+import { getSubInfo } from './ethers.js';
 
 /**
  * Queries for event logs (optionally decoded) from provider or contract, in an arbitrary block range.

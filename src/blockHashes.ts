@@ -1,7 +1,7 @@
 import type { Provider } from 'ethers';
-import { Multicall, Multicall__factory } from './typechain';
-import { MULTICALL_ADDRESS } from './multicall';
-import { range } from './utils';
+import { Multicall, Multicall__factory } from './typechain/index.js';
+import { MULTICALL_ADDRESS } from './multicall.js';
+import { range } from './utils.js';
 
 /**
  * Compare last 80 blocks to find reorgs

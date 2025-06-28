@@ -2,10 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { ContractRunner } from 'ethers';
-import { ethers } from '../../ethers';
-const { Contract, Interface } = ethers;
-import type { Permit2, Permit2Interface } from "../Permit2";
+import { Contract, Interface, type ContractRunner } from "ethers";
+import type { Permit2, Permit2Interface } from "../Permit2.js";
 
 const _abi = [
   {

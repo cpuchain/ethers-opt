@@ -1,7 +1,7 @@
-import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers';
-import { expect } from 'chai';
+import { loadFixture } from '@nomicfoundation/hardhat-toolbox/network-helpers.js';
+import { describe, beforeAll, expect, it } from 'vitest';
 import { formatEther, Wallet, ZeroAddress } from 'ethers';
-import { getSigners } from '../src/fixtures';
+import { getSigners } from '../src/hardhat/fixtures/index.js';
 import {
     GAS_PRICE_ORACLE_ADDRESS,
     getChainlinkPrice,
@@ -9,8 +9,8 @@ import {
     ProxySigner,
     TransactionRequestWithFees,
     WETH__factory,
-} from '../src';
-import { WETH__factory as WETH__factory2 } from '../src/typechain-hardhat';
+} from '../src/index.js';
+import { WETH__factory as WETH__factory2 } from '../src/typechain-hardhat/index.js';
 
 const ETH_RPC = 'https://rpc.mevblocker.io';
 const BNB_RPC = 'https://bsc-dataseed.bnbchain.org';
@@ -86,7 +86,7 @@ describe('signer.ts', function () {
         return { provider, signer, chainId, weth };
     };
 
-    before('find vitalik.eth address and load prices', async function () {
+    beforeAll(async function () {
         const provider = new Provider(ETH_RPC);
 
         vitalikAddress = (await provider.resolveName('vitalik.eth')) as string;

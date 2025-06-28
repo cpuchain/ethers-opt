@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { formatFeeHistory } from '../src';
+import { describe, expect, it } from 'vitest';
+import { formatFeeHistory } from '../src/index.js';
 
 describe('feeEstimator.ts', function () {
     it('correctly formats fee history', function () {
@@ -14,7 +14,7 @@ describe('feeEstimator.ts', function () {
             ],
         };
         const history = formatFeeHistory(result, 3);
-        expect(history.blocks).to.have.length(3);
+        expect(history.blocks).to.have.length('3');
         expect(history.baseFeePerGasAvg).to.be.a('bigint');
     });
 });

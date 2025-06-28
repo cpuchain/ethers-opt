@@ -1,7 +1,4 @@
-import type { BlockTag, JsonRpcApiProvider, Provider } from 'ethers';
-import { ethers } from './ethers';
-
-const { toQuantity } = ethers;
+import { BlockTag, JsonRpcApiProvider, Provider, toQuantity } from 'ethers';
 
 /**
  * Describes a single storage proof entry for EIP-1186.

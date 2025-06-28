@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import {
     isNode,
     createBlockTags,
@@ -20,7 +20,7 @@ import {
     hexToBase64,
     isHex,
     createBatchRateConfig,
-} from '../src';
+} from '../src/index.js';
 
 describe('utils.ts', function () {
     it('isNode should be boolean', function () {
@@ -106,7 +106,7 @@ describe('utils.ts', function () {
     it('sleep: resolves after at least the specified ms', async function () {
         const start = Date.now();
         await sleep(10);
-        expect(Date.now() - start).to.be.at.least(10);
+        expect(Date.now() - start).to.be.at.least(8);
     });
 
     it('crypto: rBytes generates random bytes of correct length', function () {

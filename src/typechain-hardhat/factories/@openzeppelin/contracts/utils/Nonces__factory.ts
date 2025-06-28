@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   Nonces,
   NoncesInterface,
-} from "../../../../@openzeppelin/contracts/utils/Nonces";
+} from "../../../../@openzeppelin/contracts/utils/Nonces.js";
 
 const _abi = [
   {
