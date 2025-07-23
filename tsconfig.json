@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "typeRoots": [
+            "./node_modules/@types",
+        ],
+        "target": "ES2022",
+        "lib": ["ES2016", "ES2021", "ES2022", "DOM", "ESNext"],
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "resolveJsonModule": false,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "ignition",
+        "scripts",
+        "src",
+        "test",
+    ],
+    "exclude": ["node_modules"],
+    "files": ["hardhat.config.cts"]
+}
