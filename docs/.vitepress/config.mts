@@ -10,6 +10,10 @@ export const LOGO = '/logo.png';
 
 // https://vitepress.dev/reference/site-config
 export const getConfig = defineConfig({
+  sitemap: {
+    hostname: HOMEPAGE,
+  },
+
   title: TITLE,
 
   description: pkgJson.description,
