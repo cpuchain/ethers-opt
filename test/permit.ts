@@ -16,7 +16,7 @@ describe('permit.ts', function () {
     it('produces a valid signature', async function () {
         const { bob, token } = await loadFixture(commonFixture);
 
-        const sig = await permit(token, bob, 1n);
+        const sig = await permit(token, bob.address, 1n);
 
         expect(sig).to.have.property('v');
         expect(sig).to.have.property('r');
@@ -29,7 +29,7 @@ describe('permit.ts', function () {
         const value = parseEther('10');
         const deadline = ((await owner.provider.getBlock('latest'))?.timestamp || 0) + 3600;
 
-        const { v, r, s } = await permit(token, bob, value, deadline);
+        const { v, r, s } = await permit(token, bob.address, value, deadline);
 
         await (await token.connect(bob).permit(owner.address, bob.address, value, deadline, v, r, s)).wait();
 
