@@ -4,7 +4,7 @@
 
 # ethers-opt
 
-[![NPM Version](https://img.shields.io/npm/v/ethers-opt)](https://www.npmjs.com/package/ethers-opt) ![Statements](https://img.shields.io/badge/statements-84.61%25-brightgreen.svg?style=flat)
+[![NPM Version](https://img.shields.io/npm/v/ethers-opt)](https://www.npmjs.com/package/ethers-opt) ![Statements](https://img.shields.io/badge/statements-84.51%25-brightgreen.svg?style=flat)
 
 Collection of heavily optimized functions for ethers.js V6
 

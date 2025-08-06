@@ -318,18 +318,15 @@ export class ProxySigner implements SignerWithAddress {
     }
 
     async sendTransaction(tx: TransactionRequest): Promise<TransactionResponseWithFees> {
-        if (this.parentSigner instanceof JsonRpcSigner || this.#wrappedProvider) {
-            const txObj = await populateTransaction(this, tx);
-            const sentTx = (await this.parentSigner.sendTransaction(txObj)) as TransactionResponseWithFees;
-            if (txObj.txCost) {
-                sentTx.txCost = txObj.txCost;
-            }
-            if (txObj.l1Fee) {
-                sentTx.l1Fee = txObj.l1Fee;
-            }
-            return sentTx;
+        const txObj = await populateTransaction(this, tx);
+        const sentTx = (await this.parentSigner.sendTransaction(txObj)) as TransactionResponseWithFees;
+        if (txObj.txCost) {
+            sentTx.txCost = txObj.txCost;
         }
-        return this.parentSigner.sendTransaction(tx);
+        if (txObj.l1Fee) {
+            sentTx.l1Fee = txObj.l1Fee;
+        }
+        return sentTx;
     }
 
     /**
