@@ -5,7 +5,7 @@ export const hhExternal = (id) => (/^(@[\w-]+\/)?[\w-]+$/.test(id) || id.startsW
 const config = [
     getRollupConfig({ input: './src/index.ts' }),
     getRollupConfig({ 
-        input: './src/index.ts',
+        input: './src/index.umd.ts',
         browserName: 'ethersOpt',
         globals: {
             ethers: 'ethers'
@@ -13,7 +13,7 @@ const config = [
         external: ['crypto', 'ethers'],
     }),
     getRollupConfig({ 
-        input: './src/index.ts',
+        input: './src/index.umd.ts',
         browserName: 'ethersOpt',
         globals: {
             ethers: 'ethers'
@@ -22,6 +22,7 @@ const config = [
         minify: true,
     }),
     getRollupConfig({ input: './src/hardhat/fixtures/index.ts', external: hhExternal }),
+    getRollupConfig({ input: './src/hardhat/compile.ts', external: hhExternal }),
     getRollupConfig({ input: './src/hardhat/flatten.ts', external: hhExternal }),
     getRollupConfig({ input: './src/hardhat/remappings.ts', external: hhExternal }),
     getRollupConfig({ input: './src/hardhat/typefix.ts', external: hhExternal }),

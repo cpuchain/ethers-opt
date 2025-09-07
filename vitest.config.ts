@@ -19,6 +19,7 @@ export default defineConfig({
                 "src/ethers.ts",
                 "src/getUrl.ts",
                 "src/idb.ts",
+                "src/index.umd.ts",
                 "src/traceBlock.ts",
                 "src/ens/*.ts"
             ],

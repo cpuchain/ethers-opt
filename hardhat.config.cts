@@ -1,11 +1,11 @@
-import process from 'process';
-import '@nomicfoundation/hardhat-toolbox';
-import '@nomicfoundation/hardhat-ethers';
-import 'hardhat-dependency-compiler';
-import 'hardhat-preprocessor';
-import './lib/hardhat/flatten.js';
-import './lib/hardhat/typefix.js';
-import 'dotenv/config';
+const process = require('process');
+require('@nomicfoundation/hardhat-toolbox');
+require('@nomicfoundation/hardhat-ethers');
+require('hardhat-dependency-compiler');
+require('hardhat-preprocessor');
+require('./lib/hardhat/compile.cjs');
+const { getRemappingsTransformerFunc } = require('./lib/hardhat/remappings.cjs');
+require('dotenv/config');
 
 const config = {
     defaultNetwork: 'hardhat',
@@ -22,6 +22,10 @@ const config = {
                 },
             },
         ],
+    },
+    ethersOpt: {
+        flattenAll: true,
+        typechainFix: true,
     },
     // Add dependency contracts to use that aren't imported (like Safe or AAVE pools for example)
     dependencyCompiler: {
@@ -46,9 +50,6 @@ const config = {
     // Uses remappings.txt to remap import paths (like foundry)
     preprocess: {
         eachLine: async () => {
-            // Ensure that this works for both CJS / ESM env
-            const { getRemappingsTransformerFunc } = require('./lib/hardhat/remappings.cjs');
-
             const { transform } = await getRemappingsTransformerFunc();
 
             return {
@@ -58,4 +59,4 @@ const config = {
     },
 };
 
-export default config;
+module.exports = config;

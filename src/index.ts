@@ -7,7 +7,6 @@ export * from './browserProvider.js';
 export * from './ethers.js';
 export * from './events.js';
 export * from './feeEstimator.js';
-export * from './idb.js';
 export * from './multicall.js';
 export * from './op.js';
 export * from './permit.js';

@@ -1,6 +1,5 @@
 import { webcrypto } from 'crypto';
 import { AbstractProvider, AddressLike, Authorization, AuthorizationRequest, BaseContract, BigNumberish, Block, BlockParams, BlockTag, BrowserProvider as ethBrowserProvider, BrowserProviderOptions, BytesLike, ContractEventName, ContractMethod, ContractRunner, ContractTransaction, ContractTransactionResponse, DeferredTopicFilter, Eip1193Provider, EnsResolver as ethEnsResolver, EventFragment, EventLog, FeeData, FetchRequest, FunctionFragment, Interface, JsonRpcApiProviderOptions, JsonRpcProvider, JsonRpcSigner, Listener, Log, LogDescription, Network, Networkish, Overrides, PerformActionRequest, Provider, Provider as ethProvider, Result, Signature, Signer, SigningKey, TopicFilter, TransactionLike, TransactionReceipt, TransactionRequest, TransactionResponse, Typed, TypedDataDomain, TypedDataField } from 'ethers';
-import * as idb from 'idb';
 import { EventEmitter } from 'stream';
 import { Dispatcher, RequestInit as RequestInit$1 } from 'undici-types';
 
@@ -7600,69 +7599,6 @@ export declare function formatFeeHistory(result: FeeHistoryResp, historicalBlock
  * @returns The appropriate gas price.
  */
 export declare function getGasPrice(feeData: FeeData): bigint;
-export interface IDBStore {
-	name: string;
-	keyPath?: string;
-	indexes?: IDBIndex[];
-}
-export declare class IndexedDB {
-	name: string;
-	version: number;
-	options: idb.OpenDBCallbacks<any>;
-	db: Promise<idb.IDBPDatabase<any> | undefined>;
-	constructor({ name, version, stores }: {
-		name: string;
-		version?: number;
-		stores?: IDBStore[];
-	});
-	openDB(): Promise<idb.IDBPDatabase<any> | undefined>;
-	deleteDB(): Promise<void>;
-	getItem<T>({ storeName, key }: {
-		storeName: string;
-		key: string;
-	}): Promise<T | undefined>;
-	/**
-	 * Add item only if key is new
-	 */
-	addItem({ storeName, key, data }: {
-		storeName: string;
-		key: string;
-		data: any;
-	}): Promise<void>;
-	/**
-	 * Override item for key
-	 */
-	putItem({ storeName, key, data, }: {
-		storeName: string;
-		key?: string;
-		data: any;
-	}): Promise<void>;
-	deleteItem({ storeName, key }: {
-		storeName: string;
-		key: string;
-	}): Promise<void>;
-	getAll<T>({ storeName }: {
-		storeName: string;
-	}): Promise<T>;
-	clearStore({ storeName }: {
-		storeName: string;
-	}): Promise<void>;
-	createTransactions({ storeName, data }: {
-		storeName: string;
-		data: any;
-	}): Promise<void>;
-	createMultipleTransactions({ storeName, data, index, }: {
-		storeName: string;
-		data: any[];
-		index?: any;
-	}): Promise<void>;
-	/**
-	 * Key-Value
-	 */
-	get<T>(key: string): Promise<T | undefined>;
-	set(key: string, data: any): Promise<void>;
-	del(key: string): Promise<void>;
-}
 export declare const MULTICALL_ADDRESS = "0xcA11bde05977b3631167028862bE2a173976CA11";
 /**
  * Minimal multicall configuration object for aggregate3 calls.
