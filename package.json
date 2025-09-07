@@ -1,6 +1,6 @@
 {
     "name": "ethers-opt",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "Collection of heavily optimized functions for ethers.js V6",
     "license": "MIT",
     "author": "CPUchain",
@@ -18,6 +18,11 @@
             "import": "./lib/hardhat/fixtures/index.js",
             "require": "./lib/hardhat/fixtures/index.cjs",
             "default": "./lib/hardhat/fixtures/index.js"
+        },
+        "./hardhat/compile": {
+            "import": "./lib/hardhat/compile.js",
+            "require": "./lib/hardhat/compile.cjs",
+            "default": "./lib/hardhat/compile.js"
         },
         "./hardhat/flatten": {
             "import": "./lib/hardhat/flatten.js",
