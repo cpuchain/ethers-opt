@@ -1,0 +1,21 @@
+{
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "src/hardhat/**/*.ts",
+        "src/typechain/**/*.ts",
+        "src/typechain-hardhat/**/*.ts",
+        "src/browserProvider.ts",
+        "src/ethers.ts",
+        "src/idb.ts",
+        "src/traceBlock.ts",
+        "src/ens/*.ts"
+    ],
+    "reporter": [
+        "text",
+        "json-summary",
+        "html"
+    ]
+}

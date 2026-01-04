@@ -1,0 +1,126 @@
+{
+    "name": "ethers-opt",
+    "version": "1.0.10",
+    "description": "Collection of heavily optimized functions for ethers.js V6",
+    "license": "MIT",
+    "author": "CPUchain",
+    "type": "module",
+    "main": "./lib/index.cjs",
+    "module": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./lib/index.js",
+            "require": "./lib/index.cjs",
+            "default": "./lib/index.js"
+        },
+        "./hardhat/fixtures": {
+            "import": "./lib/hardhat/fixtures/index.js",
+            "require": "./lib/hardhat/fixtures/index.cjs",
+            "default": "./lib/hardhat/fixtures/index.js"
+        },
+        "./hardhat/compile": {
+            "import": "./lib/hardhat/compile.js",
+            "require": "./lib/hardhat/compile.cjs",
+            "default": "./lib/hardhat/compile.js"
+        },
+        "./hardhat/flatten": {
+            "import": "./lib/hardhat/flatten.js",
+            "require": "./lib/hardhat/flatten.cjs",
+            "default": "./lib/hardhat/flatten.js"
+        },
+        "./hardhat/remappings": {
+            "import": "./lib/hardhat/remappings.js",
+            "require": "./lib/hardhat/remappings.cjs",
+            "default": "./lib/hardhat/remappings.js"
+        },
+        "./hardhat/typefix": {
+            "import": "./lib/hardhat/typefix.js",
+            "require": "./lib/hardhat/typefix.cjs",
+            "default": "./lib/hardhat/typefix.js"
+        },
+        "./prover": {
+            "import": "./lib/prover/index.js",
+            "require": "./lib/prover/index.cjs",
+            "default": "./lib/prover/index.js"
+        }
+    },
+    "keywords": [
+        "ethers",
+        "ethereum",
+        "web3",
+        "dapp",
+        "browser"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cpuchain/ethers-opt.git"
+    },
+    "scripts": {
+        "hardhat": "cross-env NODE_OPTIONS=\"--loader ts-node/esm/transpile-only --no-warnings=ExperimentalWarning\" hardhat",
+        "prettier": "prettier contracts/**/*.sol",
+        "lint": "yarn prettier -c && eslint scripts/**/*.ts src/**/*.ts test/**/*.ts --ignore-pattern src/typechain --ignore-pattern src/typechain-hardhat",
+        "compile": "hardhat clean && hardhat compile",
+        "typechain": "yarn compile && typechain --node16-modules --target ethers-v6 --out-dir src/typechain src/abi/*.json",
+        "build": "tsc -p tsconfig.types.json --noEmit && rollup -c",
+        "syncEvents": "yarn hardhat run ./scripts/syncEvents.ts",
+        "deploy:token": "yarn hardhat run ./scripts/deployToken.ts",
+        "docs:dev": "vitepress dev docs",
+        "docs:build": "vitepress build docs",
+        "docs:preview": "vitepress preview docs",
+        "test": "vitest && istanbul-badges-readme --colors=\"red:50,yellow:60\""
+    },
+    "dependencies": {
+        "ethers": "^6.16.0"
+    },
+    "devDependencies": {
+        "@cpuchain/eslint": "^1.0.11",
+        "@cpuchain/rollup": "^1.0.11",
+        "@ethereumjs/mpt": "^10.1.0",
+        "@ethereumjs/rlp": "^10.1.0",
+        "@nomicfoundation/hardhat-chai-matchers": "2.1.0",
+        "@nomicfoundation/hardhat-ethers": "3.1.0",
+        "@nomicfoundation/hardhat-ignition": "0.15.13",
+        "@nomicfoundation/hardhat-ignition-ethers": "0.15.14",
+        "@nomicfoundation/hardhat-network-helpers": "1.1.0",
+        "@nomicfoundation/hardhat-toolbox": "6.1.0",
+        "@nomicfoundation/hardhat-verify": "2.1.1",
+        "@nomicfoundation/ignition-core": "0.15.13",
+        "@openzeppelin/contracts": "^5.4.0",
+        "@typechain/ethers-v6": "npm:@cpuchain/typechain-ethers-v6@^0.5.1",
+        "@typechain/hardhat": "npm:@cpuchain/typechain-hardhat@^9.1.0",
+        "@types/chai": "^5.2.3",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^25.0.3",
+        "@vitest/coverage-v8": "^4.0.16",
+        "chai": "5.2.1",
+        "cross-env": "^10.1.0",
+        "dotenv": "^17.2.3",
+        "glob": "^13.0.0",
+        "hardhat": "2.26.3",
+        "hardhat-dependency-compiler": "1.2.1",
+        "hardhat-gas-reporter": "2.3.0",
+        "hardhat-preprocessor": "0.1.5",
+        "idb": "^8.0.3",
+        "istanbul-badges-readme": "^1.9.0",
+        "logger-chain": "^1.0.4",
+        "openzeppelin-contracts": "npm:@openzeppelin/contracts@^5.3.0",
+        "prettier-plugin-solidity": "^2.2.1",
+        "solidity-coverage": "^0.8.17",
+        "solmate": "^6.8.0",
+        "ts-node": "^10.9.2",
+        "tsc": "^2.0.4",
+        "tsx": "^4.21.0",
+        "typechain": "npm:@cpuchain/typechain@^8.3.3",
+        "typescript": "^5.9.3",
+        "undici-types": "^7.16.0",
+        "vitepress": "^1.6.4",
+        "vitest": "^4.0.16"
+    },
+    "resolutions": {
+        "@types/minimatch": "5.1.1",
+        "cookie": "^0.7.1",
+        "ethers": "^6.15.0",
+        "fast-glob": ">=3.3.3"
+    }
+}
